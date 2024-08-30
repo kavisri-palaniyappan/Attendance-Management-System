@@ -1,0 +1,168 @@
+create database food_delivery;
+use food_delivery;
+
+-- Users table
+create table users (
+    userid varchar(10) not null,
+    username varchar(50) not null,
+    useremail varchar(50) not null,
+    userpassword varchar(50) not null,
+    createddate date not null,
+    primary key (userid)
+);
+
+insert into users (userid, username, useremail, userpassword, createddate) values
+('U1', 'Alice', 'alice@example.com', 'password123', '2024-01-01'),
+('U2', 'Bob', 'bob@example.com', 'password456', '2024-01-02'),
+('U3', 'Charlie', 'charlie@example.com', 'password789', '2024-01-03'),
+('U4', 'David', 'david@example.com', 'password101', '2024-01-04'),
+('U5', 'Eva', 'eva@example.com', 'password202', '2024-01-05'),
+('U6', 'Frank', 'frank@example.com', 'password303', '2024-01-06'),
+('U7', 'Grace', 'grace@example.com', 'password404', '2024-01-07'),
+('U8', 'Hannah', 'hannah@example.com', 'password505', '2024-01-08'),
+('U9', 'Ian', 'ian@example.com', 'password606', '2024-01-09'),
+('U10', 'Judy', 'judy@example.com', 'password707', '2024-01-10');
+
+select * from users;
+
+-- Restaurants table
+create table restaurants (
+    restaurantid varchar(10) not null,
+    restaurantname varchar(50) not null,
+    address varchar(100) not null,
+    primary key (restaurantid)
+);
+
+insert into restaurants (restaurantid, restaurantname, address) values
+('R1', 'Pizza Place', '123 Pizza St'),
+('R2', 'Burger Joint', '456 Burger Blvd'),
+('R3', 'Sushi Spot', '789 Sushi Ave'),
+('R4', 'Pasta House', '101 Pasta Rd'),
+('R5', 'Salad Bar', '202 Salad St'),
+('R6', 'Taco Town', '303 Taco Ln'),
+('R7', 'Noodle Shop', '404 Noodle Blvd'),
+('R8', 'BBQ Barn', '505 BBQ Dr'),
+('R9', 'Seafood Shack', '606 Seafood Blvd'),
+('R10', 'Vegan Bistro', '707 Vegan Rd');
+
+select * from restaurants;
+
+-- Menus table
+create table menus (
+    menuid varchar(10) not null,
+    restaurantid varchar(10) not null,
+    dishname varchar(50) not null,
+    price decimal(10, 2) not null,
+    primary key (menuid),
+    foreign key (restaurantid) references restaurants(restaurantid)
+);
+
+insert into menus (menuid, restaurantid, dishname, price) values
+('M1', 'R1', 'Margherita Pizza', 12.99),
+('M2', 'R1', 'Pepperoni Pizza', 14.99),
+('M3', 'R2', 'Cheeseburger', 9.99),
+('M4', 'R2', 'Fries', 3.99),
+('M5', 'R3', 'California Roll', 11.99),
+('M6', 'R3', 'Spicy Tuna Roll', 13.99),
+('M7', 'R4', 'Spaghetti Carbonara', 15.99),
+('M8', 'R4', 'Lasagna', 17.99),
+('M9', 'R5', 'Greek Salad', 8.99),
+('M10', 'R5', 'Caesar Salad', 9.99),
+('M11', 'R6', 'Beef Tacos', 10.99),
+('M12', 'R6', 'Chicken Tacos', 11.99),
+('M13', 'R7', 'Chicken Noodles', 12.99),
+('M14', 'R7', 'Beef Noodles', 13.99),
+('M15', 'R8', 'BBQ Ribs', 18.99),
+('M16', 'R8', 'Pulled Pork Sandwich', 14.99),
+('M17', 'R9', 'Grilled Salmon', 19.99),
+('M18', 'R9', 'Shrimp Scampi', 17.99),
+('M19', 'R10', 'Vegan Burger', 12.99),
+('M20', 'R10', 'Quinoa Salad', 11.99);
+
+select * from menus;
+
+-- Orders table
+create table orders (
+    orderid varchar(10) not null,
+    userid varchar(10) not null,
+    orderdate date not null,
+    deliverypersonnelid varchar(10),
+    primary key (orderid)
+    -- foreign key (userid) references users(userid)
+--     foreign key (deliverypersonnelid) references deliverypersonnel(deliverypersonnelid)
+);
+
+insert into orders (orderid, userid, orderdate, deliverypersonnelid) values
+('O1', 'U1', '2024-02-01', 'D1'),
+('O2', 'U2', '2024-02-02', 'D2'),
+('O3', 'U3', '2024-02-03', 'D3'),
+('O4', 'U4', '2024-02-04', 'D4'),
+('O5', 'U5', '2024-02-05', 'D5'),
+('O6', 'U6', '2024-02-06', 'D1'),
+('O7', 'U7', '2024-02-07', 'D2'),
+('O8', 'U8', '2024-02-08', 'D3'),
+('O9', 'U9', '2024-02-09', 'D4'),
+('O10', 'U10', '2024-02-10', 'D5');
+
+select * from orders;
+-- Order Items table
+create table orderitems (
+    orderitemid varchar(10) not null,
+    orderid varchar(10) not null,
+    menuid varchar(10) not null,
+    quantity int not null,
+    primary key (orderitemid),
+    foreign key (orderid) references orders(orderid),
+    foreign key (menuid) references menus(menuid)
+);
+
+insert into orderitems (orderitemid, orderid, menuid, quantity) values
+('OI1', 'O1', 'M1', 2),
+('OI2', 'O1', 'M2', 1),
+('OI3', 'O2', 'M3', 1),
+('OI4', 'O2', 'M4', 2),
+('OI5', 'O3', 'M5', 3),
+('OI6', 'O3', 'M6', 1),
+('OI7', 'O4', 'M7', 1),
+('OI8', 'O4', 'M8', 1),
+('OI9', 'O5', 'M9', 2),
+('OI10', 'O5', 'M10', 1),
+('OI11', 'O6', 'M11', 2),
+('OI12', 'O6', 'M12', 1),
+('OI13', 'O7', 'M13', 1),
+('OI14', 'O7', 'M14', 1),
+('OI15', 'O8', 'M15', 1),
+('OI16', 'O8', 'M16', 1),
+('OI17', 'O9', 'M17', 2),
+('OI18', 'O9', 'M18', 1),
+('OI19', 'O10', 'M19', 2),
+('OI20', 'O10', 'M20', 1);
+
+select * from orderitems;
+
+-- Delivery Personnel table
+create table deliverypersonnel (
+    deliverypersonnelid varchar(10) not null,
+    name varchar(50) not null,
+    phonenumber varchar(15) not null,
+    primary key (deliverypersonnelid)
+);
+
+insert into deliverypersonnel (deliverypersonnelid, name, phonenumber) VALUES
+('D1', 'John', '555-1234'),
+('D2', 'Jane', '555-5678'),
+('D3', 'Alex', '555-8765'),
+('D4', 'Sam', '555-4321'),
+('D5', 'Lisa', '555-6789');
+
+select * from deliverypersonnel;
+
+select users.username, orders.order_id, orders.order_date
+from users
+inner join orders on users.userid = orders.userid;
+
+select orders.orderid, orderitems.menuid, menus.dishname, orderitems.quantity
+from orders
+inner join orderitems on orders.orderid = orderitems.orderid
+inner join menus on orderitems
+
